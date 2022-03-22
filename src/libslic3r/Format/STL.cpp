@@ -16,6 +16,7 @@ namespace Slic3r {
 
 bool load_stl(const char *path, Model *model, const char *object_name_in)
 {
+    /*
     const char *path1 = "D:\\source\\PrusaSlicer\\build\\src\\Release\\resources\\shapes\\cylinder.stl";
     TriangleMesh cymesh;
     if (!cymesh.ReadSTLFile(path1)) {
@@ -26,6 +27,8 @@ bool load_stl(const char *path, Model *model, const char *object_name_in)
     }
     std::string cyname = "cylin1";
     model->add_object(cyname.c_str(), path1, std::move(cymesh));
+    */
+
 
     std::cout << "STL.cpp: load_stl: " << std::endl
               << path << std::endl
@@ -50,6 +53,7 @@ bool load_stl(const char *path, Model *model, const char *object_name_in)
        object_name.assign(object_name_in);
 
     model->add_object(object_name.c_str(), path, std::move(mesh));
+    model->add_trusssupp();
     std::cout << "STL.cpp: objects count: " << model->objects.size()
               << std::endl
               << std::endl;

@@ -235,6 +235,26 @@ ModelObject* Model::add_object(const ModelObject &other)
     return new_object;
 }
 
+ModelObject* Model::add_trusssupp() {
+    std::cout << "Model::add_trusssupp" << std::endl;
+    ModelObject* new_object = new ModelObject(this);
+    this->objects.push_back(new_object);
+    new_object->name = "truss";
+    const char *path1 = "D:"
+                        "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
+                        "s\\shapes\\cylinder.stl";
+    new_object->input_file = path1;
+    TriangleMesh cymesh;
+    cymesh.ReadSTLFile(path1);
+    ModelVolume *new_volume = new_object->add_volume(std::move(cymesh));
+    new_volume->name        = "truss";
+    new_volume->source.input_file = path1;
+    new_volume->source.object_idx = (int) this->objects.size() - 1;
+    new_volume->source.volume_idx = (int) new_object->volumes.size() - 1;
+    new_object->invalidate_bounding_box();
+    return new_object;
+}
+
 void Model::delete_object(size_t idx)
 {
     ModelObjectPtrs::iterator i = this->objects.begin() + idx;

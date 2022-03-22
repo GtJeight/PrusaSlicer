@@ -1143,6 +1143,9 @@ public:
     // Checks if any of objects is painted using the multi-material painting gizmo.
     bool          is_mm_painted() const;
 
+
+    ModelObject *add_trusssupp();
+
 private:
     explicit Model(int) : ObjectBase(-1) { assert(this->id().invalid()); }
 	void assign_new_unique_ids_recursive();
