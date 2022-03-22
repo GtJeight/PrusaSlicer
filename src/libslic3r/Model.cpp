@@ -183,12 +183,17 @@ Model Model::read_from_archive(const std::string& input_file, DynamicPrintConfig
 
 ModelObject* Model::add_object()
 {
+    std::cout << "Model::add_object1" << std::endl;
     this->objects.emplace_back(new ModelObject(this));
     return this->objects.back();
 }
 
 ModelObject* Model::add_object(const char *name, const char *path, const TriangleMesh &mesh)
 {
+    std::cout << "Model.cpp: add_object2: " << std::endl
+              << name << std::endl
+              << path << std::endl
+              << std::endl;
     ModelObject* new_object = new ModelObject(this);
     this->objects.push_back(new_object);
     new_object->name = name;
@@ -204,6 +209,10 @@ ModelObject* Model::add_object(const char *name, const char *path, const Triangl
 
 ModelObject* Model::add_object(const char *name, const char *path, TriangleMesh &&mesh)
 {
+    std::cout << "Model.cpp: add_object3: " << std::endl
+              << name << std::endl
+              << path << std::endl
+              << std::endl;
     ModelObject* new_object = new ModelObject(this);
     this->objects.push_back(new_object);
     new_object->name = name;
@@ -219,6 +228,7 @@ ModelObject* Model::add_object(const char *name, const char *path, TriangleMesh 
 
 ModelObject* Model::add_object(const ModelObject &other)
 {
+    std::cout << "Model::add_object4" << std::endl;
 	ModelObject* new_object = ModelObject::new_clone(other);
     new_object->set_model(this);
     this->objects.push_back(new_object);
@@ -691,6 +701,7 @@ void ModelObject::assign_new_unique_ids_recursive()
 
 ModelVolume* ModelObject::add_volume(const TriangleMesh &mesh)
 {
+    std::cout << "ModelObject::add_volume1" << std::endl;
     ModelVolume* v = new ModelVolume(this, mesh);
     this->volumes.push_back(v);
     v->center_geometry_after_creation();
@@ -700,6 +711,7 @@ ModelVolume* ModelObject::add_volume(const TriangleMesh &mesh)
 
 ModelVolume* ModelObject::add_volume(TriangleMesh &&mesh, ModelVolumeType type /*= ModelVolumeType::MODEL_PART*/)
 {
+    std::cout << "ModelObject::add_volume2" << int(type) << std::endl;
     ModelVolume* v = new ModelVolume(this, std::move(mesh), type);
     this->volumes.push_back(v);
     v->center_geometry_after_creation();
@@ -709,6 +721,7 @@ ModelVolume* ModelObject::add_volume(TriangleMesh &&mesh, ModelVolumeType type /
 
 ModelVolume* ModelObject::add_volume(const ModelVolume &other, ModelVolumeType type /*= ModelVolumeType::INVALID*/)
 {
+    std::cout << "ModelObject::add_volume3" << std::endl;
     ModelVolume* v = new ModelVolume(this, other);
     if (type != ModelVolumeType::INVALID && v->type() != type)
         v->set_type(type);
@@ -721,6 +734,7 @@ ModelVolume* ModelObject::add_volume(const ModelVolume &other, ModelVolumeType t
 
 ModelVolume* ModelObject::add_volume(const ModelVolume &other, TriangleMesh &&mesh)
 {
+    std::cout << "ModelObject::add_volume4" << std::endl;
     ModelVolume* v = new ModelVolume(this, other, std::move(mesh));
     this->volumes.push_back(v);
     v->center_geometry_after_creation();

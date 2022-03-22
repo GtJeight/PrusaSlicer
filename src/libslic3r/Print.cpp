@@ -24,6 +24,8 @@
 #include <boost/log/trivial.hpp>
 #include <boost/regex.hpp>
 
+#include "DiffTrussSupport.hpp"
+
 // Mark string for localization and translate.
 #define L(s) Slic3r::I18N::translate(s)
 
@@ -804,6 +806,9 @@ void Print::auto_assign_extruders(ModelObject* model_object) const
 void Print::process()
 {
     name_tbb_thread_pool_threads_set_locale();
+
+    std::cout << "testttttttttttttttttttttttttttttt" << std::endl;
+    DiffTrussSupport a("adasadasd");
 
     BOOST_LOG_TRIVIAL(info) << "Starting the slicing process." << log_memory_info();
     for (PrintObject *obj : m_objects)

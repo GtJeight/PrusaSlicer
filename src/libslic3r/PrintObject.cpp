@@ -56,6 +56,7 @@ PrintObject::PrintObject(Print* print, ModelObject* model_object, const Transfor
     PrintObjectBaseWithState(print, model_object),
     m_trafo(trafo)
 {
+    std::cout << "PrintObject::PrintObject" << std::endl;
     // Compute centering offet to be applied to our meshes so that we work with smaller coordinates
     // requiring less bits to represent Clipper coordinates.
 

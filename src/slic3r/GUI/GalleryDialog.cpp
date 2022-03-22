@@ -57,6 +57,7 @@ private:
 
 bool GalleryDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames)
 {
+    std::cout << "OnDropFiles" << std::endl;
 #ifdef WIN32
     // hides the system icon
     this->MSWUpdateDragImageOnLeave();
@@ -68,6 +69,7 @@ bool GalleryDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& f
 GalleryDialog::GalleryDialog(wxWindow* parent, bool modify_gallery/* = false*/) :
     DPIDialog(parent, wxID_ANY, _L("Shape Gallery"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+    std::cout << "GalleryDialog" << std::endl;
 #ifndef _WIN32
     SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 #endif
@@ -248,6 +250,7 @@ static std::string get_dir_path(bool sys_dir)
 
 static void generate_thumbnail_from_model(const std::string& filename)
 {
+    std::cout << "generate_thumbnail_from_model" << std::endl;
     if (!boost::algorithm::iends_with(filename, ".stl") &&
         !boost::algorithm::iends_with(filename, ".obj")) {
         BOOST_LOG_TRIVIAL(error) << "Found invalid file type in generate_thumbnail_from_model() [" << filename << "]";
@@ -402,6 +405,7 @@ void GalleryDialog::get_input_files(wxArrayString& input_files)
 
 void GalleryDialog::add_custom_shapes(wxEvent& event)
 {
+    std::cout << "GalleryDialog::add_custom_shapes" << std::endl;
     wxArrayString input_files;
     wxFileDialog dialog(this, _L("Choose one or more files (STL, OBJ):"),
         from_u8(wxGetApp().app_config->get_last_dir()), "",
@@ -532,6 +536,7 @@ void GalleryDialog::update()
 
 bool GalleryDialog::load_files(const wxArrayString& input_files)
 {
+    std::cout << "GalleryDialog::load_files" << std::endl;
     auto dest_dir = get_dir(false);
 
     try {
