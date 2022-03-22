@@ -53,7 +53,7 @@ bool load_stl(const char *path, Model *model, const char *object_name_in)
        object_name.assign(object_name_in);
 
     model->add_object(object_name.c_str(), path, std::move(mesh));
-    model->add_trusssupp();
+    //model->add_trusssupp();
     std::cout << "STL.cpp: objects count: " << model->objects.size()
               << std::endl
               << std::endl;

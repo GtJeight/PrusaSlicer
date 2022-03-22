@@ -223,6 +223,7 @@ ModelObject* Model::add_object(const char *name, const char *path, TriangleMesh 
     new_volume->source.object_idx = (int)this->objects.size() - 1;
     new_volume->source.volume_idx = (int)new_object->volumes.size() - 1;
     new_object->invalidate_bounding_box();
+    new_object->add_trusssupp();
     return new_object;
 }
 
@@ -235,6 +236,7 @@ ModelObject* Model::add_object(const ModelObject &other)
     return new_object;
 }
 
+/*
 ModelObject* Model::add_trusssupp() {
     std::cout << "Model::add_trusssupp" << std::endl;
     ModelObject* new_object = new ModelObject(this);
@@ -254,6 +256,7 @@ ModelObject* Model::add_trusssupp() {
     new_object->invalidate_bounding_box();
     return new_object;
 }
+*/
 
 void Model::delete_object(size_t idx)
 {
@@ -756,6 +759,20 @@ ModelVolume* ModelObject::add_volume(const ModelVolume &other, TriangleMesh &&me
 {
     std::cout << "ModelObject::add_volume4" << std::endl;
     ModelVolume* v = new ModelVolume(this, other, std::move(mesh));
+    this->volumes.push_back(v);
+    v->center_geometry_after_creation();
+    this->invalidate_bounding_box();
+    return v;
+}
+
+ModelVolume* ModelObject::add_trusssupp() {
+    const char *path1 = "D:"
+                        "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
+                        "s\\shapes\\cylinder.stl";
+    TriangleMesh cymesh;
+    cymesh.ReadSTLFile(path1);
+
+    ModelVolume *v = new ModelVolume(this, cymesh);
     this->volumes.push_back(v);
     v->center_geometry_after_creation();
     this->invalidate_bounding_box();

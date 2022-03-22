@@ -377,6 +377,8 @@ public:
     // Get count of errors in the mesh( or all object's meshes, if volume index isn't defined)
     int         get_repaired_errors_count(const int vol_idx = -1) const;
 
+    ModelVolume *add_trusssupp();
+
 private:
     friend class Model;
     // This constructor assigns new ID to this ModelObject and its config.
@@ -1144,7 +1146,7 @@ public:
     bool          is_mm_painted() const;
 
 
-    ModelObject *add_trusssupp();
+    //ModelObject *add_trusssupp();
 
 private:
     explicit Model(int) : ObjectBase(-1) { assert(this->id().invalid()); }
