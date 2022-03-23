@@ -223,7 +223,8 @@ ModelObject* Model::add_object(const char *name, const char *path, TriangleMesh 
     new_volume->source.object_idx = (int)this->objects.size() - 1;
     new_volume->source.volume_idx = (int)new_object->volumes.size() - 1;
     new_object->invalidate_bounding_box();
-    new_object->add_trusssupp();
+    if (name[0] == '_')
+        new_object->add_trusssupp();
     return new_object;
 }
 
@@ -724,7 +725,7 @@ void ModelObject::assign_new_unique_ids_recursive()
 
 ModelVolume* ModelObject::add_volume(const TriangleMesh &mesh)
 {
-    std::cout << "ModelObject::add_volume1" << std::endl;
+    std::cout << "ModelObject::add_volume1" << std::endl << std::endl;
     ModelVolume* v = new ModelVolume(this, mesh);
     this->volumes.push_back(v);
     v->center_geometry_after_creation();
@@ -734,7 +735,9 @@ ModelVolume* ModelObject::add_volume(const TriangleMesh &mesh)
 
 ModelVolume* ModelObject::add_volume(TriangleMesh &&mesh, ModelVolumeType type /*= ModelVolumeType::MODEL_PART*/)
 {
-    std::cout << "ModelObject::add_volume2" << int(type) << std::endl;
+    std::cout << "ModelObject::add_volume2" << std::endl
+              << "type:" << int(type) << std::endl
+              << std::endl;
     ModelVolume* v = new ModelVolume(this, std::move(mesh), type);
     this->volumes.push_back(v);
     v->center_geometry_after_creation();
@@ -744,7 +747,9 @@ ModelVolume* ModelObject::add_volume(TriangleMesh &&mesh, ModelVolumeType type /
 
 ModelVolume* ModelObject::add_volume(const ModelVolume &other, ModelVolumeType type /*= ModelVolumeType::INVALID*/)
 {
-    std::cout << "ModelObject::add_volume3" << std::endl;
+    std::cout << "ModelObject::add_volume3" << std::endl
+              << "type:" << int(type) << std::endl
+              << std::endl;
     ModelVolume* v = new ModelVolume(this, other);
     if (type != ModelVolumeType::INVALID && v->type() != type)
         v->set_type(type);
@@ -757,7 +762,7 @@ ModelVolume* ModelObject::add_volume(const ModelVolume &other, ModelVolumeType t
 
 ModelVolume* ModelObject::add_volume(const ModelVolume &other, TriangleMesh &&mesh)
 {
-    std::cout << "ModelObject::add_volume4" << std::endl;
+    std::cout << "ModelObject::add_volume4" << std::endl << std::endl;
     ModelVolume* v = new ModelVolume(this, other, std::move(mesh));
     this->volumes.push_back(v);
     v->center_geometry_after_creation();
@@ -768,13 +773,16 @@ ModelVolume* ModelObject::add_volume(const ModelVolume &other, TriangleMesh &&me
 ModelVolume* ModelObject::add_trusssupp() {
     const char *path1 = "D:"
                         "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
-                        "s\\shapes\\cylinder.stl";
+                        "s\\shapes\\UnitCylinder.stl";
     TriangleMesh cymesh;
     cymesh.ReadSTLFile(path1);
 
     ModelVolume *v = new ModelVolume(this, cymesh);
     this->volumes.push_back(v);
-    v->center_geometry_after_creation();
+    Vec3d trans(volumes[0]->get_offset()[0] - volumes[1]->get_offset()[0],
+                volumes[0]->get_offset()[1] - volumes[1]->get_offset()[1], 0.0);
+    v->translate(trans);
+    //v->center_geometry_after_creation();
     this->invalidate_bounding_box();
     return v;
 }
