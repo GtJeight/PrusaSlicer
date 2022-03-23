@@ -19,9 +19,11 @@ public:
     //Eigen::Matrix<double, 3, 1, 2> Orient(const int &i) const;
     double Length(const int &i) const;
     double Radius(const int& i) const;
+    double NRadius(const int& i) const;
     double ZAngle(const int &i) const;
     Eigen::Matrix<double, 3, 1, 2> RotAxis(const int &i) const;
-    Eigen::Matrix<double, 3, 1, 2> Translate(const int &i) const;
+    Eigen::Matrix<double, 3, 1, 2> TranslateS(const int &i) const;
+    Eigen::Matrix<double, 3, 1, 2> TranslateN(const int& i) const;
 
 public:
     int nNode;

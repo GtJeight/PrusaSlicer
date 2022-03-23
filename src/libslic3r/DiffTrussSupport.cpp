@@ -9,17 +9,21 @@ DiffTrussSupport::DiffTrussSupport(const std::string& path)
     supppath = path;
 
     std::ifstream ifnode("D:"
-                         "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
-                         "es\\shapes\\trusssupp\\node.txt",
-                         std::ios::binary);
+        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
+        "es\\shapes\\trusssupp\\node.txt",
+        std::ios::binary);
     std::ifstream ifradius("D:"
-                         "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
-                         "es\\shapes\\trusssupp\\radius.txt",
-                         std::ios::binary);
+        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
+        "es\\shapes\\trusssupp\\radius.txt",
+        std::ios::binary);
+    std::ifstream ifnoderadius("D:"
+        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
+        "es\\shapes\\trusssupp\\noderadius.txt",
+        std::ios::binary);
     std::ifstream ifstrut("D:"
-                         "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
-                         "es\\shapes\\trusssupp\\strut.txt",
-                         std::ios::binary);
+        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
+        "es\\shapes\\trusssupp\\strut.txt",
+        std::ios::binary);
     assert(ifnode.is_open() && ifradius.is_open() && ifstrut.is_open());
 
     double node;
@@ -36,6 +40,13 @@ DiffTrussSupport::DiffTrussSupport(const std::string& path)
         radius.push_back(rad);
     }
     radius.pop_back();
+
+    double nrad;
+    while (!ifnoderadius.eof()) {
+        ifnoderadius >> nrad;
+        node_radius.push_back(nrad);
+    }
+    node_radius.pop_back();
 
     int strut;
     while (!ifstrut.eof()) {
@@ -67,6 +78,11 @@ double DiffTrussSupport::Radius(const int& i) const
     return radius[i];
 }
 
+double DiffTrussSupport::NRadius(const int& i) const
+{
+    return node_radius[i];
+}
+
 double DiffTrussSupport::ZAngle(const int &i) const
 {
     // orinet: node1 to node2
@@ -96,9 +112,16 @@ Eigen::Matrix<double, 3, 1, 2> DiffTrussSupport::RotAxis(const int &i) const
     return axis;
 }
 
-Eigen::Matrix<double, 3, 1, 2> DiffTrussSupport::Translate(const int &i) const
+Eigen::Matrix<double, 3, 1, 2> DiffTrussSupport::TranslateS(const int &i) const
 {
     return Eigen::Vector3d(nodes[ix3(struts[ix2(i)])],
         nodes[iy3(struts[ix2(i)])],
         nodes[iz3(struts[ix2(i)])]);
+}
+
+Eigen::Matrix<double, 3, 1, 2> DiffTrussSupport::TranslateN(const int& i) const
+{
+    return Eigen::Vector3d(nodes[ix3(i)],
+        nodes[iy3(i)],
+        nodes[iz3(i)]);
 }

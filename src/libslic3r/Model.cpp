@@ -774,7 +774,7 @@ ModelVolume* ModelObject::add_volume(const ModelVolume &other, TriangleMesh &&me
 }
 
 ModelVolume* ModelObject::add_trusssupp(const DiffTrussSupport& d){
-        for (int i = 0; i < d.nStrut; i++) {
+    for (int i = 0; i < d.nStrut; i++) {
         const char* path1 =
             "D:"
             "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
@@ -792,7 +792,26 @@ ModelVolume* ModelObject::add_trusssupp(const DiffTrussSupport& d){
         v->translate(trans);
         v->scale(d.Radius(i), d.Radius(i), d.Length(i));
         v->rotate(d.ZAngle(i), d.RotAxis(i));
-        v->translate(d.Translate(i));
+        v->translate(d.TranslateS(i));
+    }
+    for (int i = 0; i < d.nNode; i++) {
+        const char* path2 =
+            "D:"
+            "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
+            "s\\shapes\\trusssupp\\UnitSphere.stl";
+        TriangleMesh spmesh;
+        spmesh.ReadSTLFile(path2);
+
+        ModelVolume* v = new ModelVolume(this, spmesh);
+        this->volumes.push_back(v);
+        Vec3d trans(volumes[0]->get_offset()[0] -
+            v->get_offset()[0],
+            volumes[0]->get_offset()[1] -
+            v->get_offset()[1],
+            0.0);
+        v->translate(trans);
+        v->scale(d.NRadius(i), d.NRadius(i), d.NRadius(i));
+        v->translate(d.TranslateN(i));
     }
     this->invalidate_bounding_box();
 
