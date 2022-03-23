@@ -21,6 +21,8 @@
 #include <utility>
 #include <vector>
 
+#include "DiffTrussSupport.hpp"
+
 namespace cereal {
 	class BinaryInputArchive;
 	class BinaryOutputArchive;
@@ -377,7 +379,7 @@ public:
     // Get count of errors in the mesh( or all object's meshes, if volume index isn't defined)
     int         get_repaired_errors_count(const int vol_idx = -1) const;
 
-    ModelVolume *add_trusssupp();
+    ModelVolume *add_trusssupp(const DiffTrussSupport &d);
 
 private:
     friend class Model;
