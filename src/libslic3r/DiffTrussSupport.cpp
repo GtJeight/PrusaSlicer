@@ -75,7 +75,9 @@ double DiffTrussSupport::ZAngle(const int &i) const
         nodes[iz3(struts[iy2(i)])] -
         nodes[iz3(struts[ix2(i)])]);
     ei.normalize();
-    return acos(ei.dot(Eigen::Vector3d(0.0, 0.0, 1.0)));
+    double theta = acos(ei.dot(Eigen::Vector3d(0.0, 0.0, 1.0)));
+    //std::cout << theta / 3.1415926 * 180 << std::endl;
+    return theta;
 }
 
 Eigen::Matrix<double, 3, 1, 2> DiffTrussSupport::RotAxis(const int &i) const
@@ -87,7 +89,9 @@ Eigen::Matrix<double, 3, 1, 2> DiffTrussSupport::RotAxis(const int &i) const
     xyrot << 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0;
     Eigen::Vector3d axis = xyrot * ei;
     if (axis.squaredNorm() < 1e-5)
-        return Eigen::Vector3d(0.0, 0.0, 1.0);
+        return Eigen::Vector3d(1.0, 0.0, 0.0);
+
+    axis.normalize();
 
     return axis;
 }
