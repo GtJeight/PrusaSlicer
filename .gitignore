@@ -19,3 +19,8 @@ build-linux/*
 deps/build-linux/*
 **/.DS_Store
 /.idea/
+resources/shapes/trusssupp/node.txt
+resources/shapes/trusssupp/node.txt
+resources/shapes/trusssupp/noderadius.txt
+resources/shapes/trusssupp/radius.txt
+resources/shapes/trusssupp/strut.txt
