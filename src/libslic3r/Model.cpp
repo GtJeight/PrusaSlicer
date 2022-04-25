@@ -225,10 +225,49 @@ ModelObject* Model::add_object(const char *name, const char *path, TriangleMesh 
     new_object->invalidate_bounding_box();
     
     if (name[0] == '_') { 
-        DiffTrussSupport d("test");
+        DiffTrussSupport d("F:\\CG\\source\\tri_truss");
         new_object->add_trusssupp(d);
     }
     return new_object;
+}
+
+ModelVolume* ModelObject::add_trusssupp(const DiffTrussSupport& d) {
+    for (int i = 0; i < d.nStrut; i++) {
+        const char* path1 = "F:\\cg\\repo\\PrusaSlicer\\build\\src\\Release\\resources\\shapes\\trusssupp\\UnitCylinder.stl";
+        TriangleMesh cymesh;
+        cymesh.ReadSTLFile(path1);
+
+        ModelVolume* v = new ModelVolume(this, cymesh);
+        this->volumes.push_back(v);
+        Vec3d trans(volumes[0]->get_offset()[0] -
+            v->get_offset()[0],
+            volumes[0]->get_offset()[1] -
+            v->get_offset()[1],
+            0.0);
+        v->translate(trans);
+        v->scale(d.Radius(i), d.Radius(i), d.Length(i));
+        v->rotate(d.ZAngle(i), d.RotAxis(i));
+        v->translate(d.TranslateS(i));
+    }
+    for (int i = 0; i < d.nNode; i++) {
+        const char* path2 = "F:\\cg\\repo\\PrusaSlicer\\build\\src\\Release\\resources\\shapes\\trusssupp\\UnitSphere.stl";
+        TriangleMesh spmesh;
+        spmesh.ReadSTLFile(path2);
+
+        ModelVolume* v = new ModelVolume(this, spmesh);
+        this->volumes.push_back(v);
+        Vec3d trans(volumes[0]->get_offset()[0] -
+            v->get_offset()[0],
+            volumes[0]->get_offset()[1] -
+            v->get_offset()[1],
+            0.0);
+        v->translate(trans);
+        v->scale(d.NRadius(i), d.NRadius(i), d.NRadius(i));
+        v->translate(d.TranslateN(i));
+    }
+    this->invalidate_bounding_box();
+
+    return volumes.back();
 }
 
 ModelObject* Model::add_object(const ModelObject &other)
@@ -239,28 +278,6 @@ ModelObject* Model::add_object(const ModelObject &other)
     this->objects.push_back(new_object);
     return new_object;
 }
-
-/*
-ModelObject* Model::add_trusssupp() {
-    std::cout << "Model::add_trusssupp" << std::endl;
-    ModelObject* new_object = new ModelObject(this);
-    this->objects.push_back(new_object);
-    new_object->name = "truss";
-    const char *path1 = "D:"
-                        "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
-                        "s\\shapes\\cylinder.stl";
-    new_object->input_file = path1;
-    TriangleMesh cymesh;
-    cymesh.ReadSTLFile(path1);
-    ModelVolume *new_volume = new_object->add_volume(std::move(cymesh));
-    new_volume->name        = "truss";
-    new_volume->source.input_file = path1;
-    new_volume->source.object_idx = (int) this->objects.size() - 1;
-    new_volume->source.volume_idx = (int) new_object->volumes.size() - 1;
-    new_object->invalidate_bounding_box();
-    return new_object;
-}
-*/
 
 void Model::delete_object(size_t idx)
 {
@@ -771,79 +788,6 @@ ModelVolume* ModelObject::add_volume(const ModelVolume &other, TriangleMesh &&me
     v->center_geometry_after_creation();
     this->invalidate_bounding_box();
     return v;
-}
-
-ModelVolume* ModelObject::add_trusssupp(const DiffTrussSupport& d){
-    for (int i = 0; i < d.nStrut; i++) {
-        const char* path1 =
-            "D:"
-            "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
-            "s\\shapes\\trusssupp\\UnitCylinder.stl";
-        TriangleMesh cymesh;
-        cymesh.ReadSTLFile(path1);
-
-        ModelVolume *v = new ModelVolume(this, cymesh);
-        this->volumes.push_back(v);
-        Vec3d trans(volumes[0]->get_offset()[0] -
-            v->get_offset()[0],
-            volumes[0]->get_offset()[1] -
-            v->get_offset()[1],
-            0.0);
-        v->translate(trans);
-        v->scale(d.Radius(i), d.Radius(i), d.Length(i));
-        v->rotate(d.ZAngle(i), d.RotAxis(i));
-        v->translate(d.TranslateS(i));
-    }
-    for (int i = 0; i < d.nNode; i++) {
-        const char* path2 =
-            "D:"
-            "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
-            "s\\shapes\\trusssupp\\UnitSphere.stl";
-        TriangleMesh spmesh;
-        spmesh.ReadSTLFile(path2);
-
-        ModelVolume* v = new ModelVolume(this, spmesh);
-        this->volumes.push_back(v);
-        Vec3d trans(volumes[0]->get_offset()[0] -
-            v->get_offset()[0],
-            volumes[0]->get_offset()[1] -
-            v->get_offset()[1],
-            0.0);
-        v->translate(trans);
-        v->scale(d.NRadius(i), d.NRadius(i), d.NRadius(i));
-        v->translate(d.TranslateN(i));
-    }
-    this->invalidate_bounding_box();
-
-    /*
-    const char* path1 =
-        "D:"
-        "\\source\\PrusaSlicer\\build\\src\\Release\\resource"
-        "s\\shapes\\trusssupp\\UnitCylinder.stl";
-    TriangleMesh cymesh;
-    cymesh.ReadSTLFile(path1);
-
-    ModelVolume* v = new ModelVolume(this, cymesh);
-    this->volumes.push_back(v);
-    Vec3d trans(volumes[0]->get_offset()[0] -
-        v->get_offset()[0],
-        volumes[0]->get_offset()[1] -
-        v->get_offset()[1],
-        0.0);
-    v->translate(trans);
-    v->rotate(PI / 2, Vec3d(0.0, 1.0, 0.0));
-
-    
-    ModelVolume* v2 = new ModelVolume(this, cymesh);
-    this->volumes.push_back(v2);
-    Vec3d trans2(volumes[0]->get_offset()[0] -
-        volumes.back()->get_offset()[0],
-        volumes[0]->get_offset()[1] -
-        volumes.back()->get_offset()[1],
-        0.0);
-    v2->translate(trans2);*/
-
-    return volumes.back();
 }
 
 void ModelObject::delete_volume(size_t idx)

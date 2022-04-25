@@ -8,22 +8,10 @@ DiffTrussSupport::DiffTrussSupport(const std::string& path)
     std::cout << path << std::endl;
     supppath = path;
 
-    std::ifstream ifnode("D:"
-        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
-        "es\\shapes\\trusssupp\\node.txt",
-        std::ios::binary);
-    std::ifstream ifradius("D:"
-        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
-        "es\\shapes\\trusssupp\\radius.txt",
-        std::ios::binary);
-    std::ifstream ifnoderadius("D:"
-        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
-        "es\\shapes\\trusssupp\\noderadius.txt",
-        std::ios::binary);
-    std::ifstream ifstrut("D:"
-        "\\source\\PrusaSlicer\\build\\src\\Release\\resourc"
-        "es\\shapes\\trusssupp\\strut.txt",
-        std::ios::binary);
+    std::ifstream ifnode(path + "\\nodes.txt", std::ios::binary);
+    std::ifstream ifradius(path + "\\radius.txt", std::ios::binary);
+    std::ifstream ifnoderadius(path + "\\noderadius.txt", std::ios::binary);
+    std::ifstream ifstrut(path + "\\beams.txt", std::ios::binary);
     assert(ifnode.is_open() && ifradius.is_open() && ifstrut.is_open());
 
     double node;
